@@ -1,4 +1,6 @@
 <div align="center">
+English | [日本語](README_ja.md)    
+
 <img src="https://i.imgur.com/EXCJv2Z.png" alt="Pyskey"></img>
 A python rapper library for misskey!
 </div>
