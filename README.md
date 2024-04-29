@@ -1,6 +1,5 @@
-English | [日本語](README_ja.md)
-
 <div align="center">
+English | <a href="README_ja.md">日本語</a>
 <img src="https://i.imgur.com/EXCJv2Z.png" alt="Pyskey"></img>
 A python rapper library for misskey!
 </div>
