@@ -1,4 +1,6 @@
 <div align="center">
+<a href="README.md">English</a> | 日本語
+
 <img src="https://i.imgur.com/EXCJv2Z.png" alt="Pyskey"></img>
 Pythonで書かれたmisskeyのラッパーライブラリ！
 </div>
