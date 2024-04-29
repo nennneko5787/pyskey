@@ -1,5 +1,5 @@
 <div align="center">
-# Pyskey
+<img src="https://i.imgur.com/EXCJv2Z.png" alt="Pyskey"></img>
 A python rapper library for misskey!
 </div>
 <hr>
@@ -19,3 +19,18 @@ pip install git+https://github.com/nennneko5787/pyskey
 ```
 git+https://github.com/nennneko5787/pyskey
 ```
+
+## example scripts
+(get_me.py)
+```python
+import pyskey
+
+misskey = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
+
+@misskey.event
+async def on_ready():
+    print(f"{misskey.me.name} ( {misskey.me.username} ) にログインしました")
+
+misskey.run()
+```
+The other samples are in the example folder.

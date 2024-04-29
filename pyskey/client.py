@@ -1,5 +1,7 @@
 import asyncio
 import aiohttp
+from .type.medetailed import MeDetailed
+from types import FunctionType
 
 class Event:
 	def __init__(self, func):
@@ -10,7 +12,7 @@ class Event:
 
 	def wrapper(self, instance):
 		async def wrapped(*args, **kwargs):
-			return await self.func(instance)
+			return await self.func(instance, *args, **kwargs)
 		return wrapped
 
 class Client:
@@ -22,16 +24,31 @@ class Client:
 	```
 	クラスを継承する方法でも呼び出せるかもしれません。(未検証)
 
-	イベントを追加するには、dispatch_event関数を使用します。
+	イベントを追加するには、デコレータを使用するか、add_event関数を使用します。
 	```
 	client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
 
-	# デコレータを使用する方法
+	# デコレータを使う方法
 	@client.event
 	async def on_ready():
-		print(f"{client.user.address}")
+		print(f"{client.me.name} ( {client.me.username} ) にログインしました - デコレータ")
+
+	# add_event関数を使う方法
+	async def ready_event():
+		print(f"{client.me.name} ( {client.me.username} ) にログインしました - add_event関数")
+	add_event("on_ready", ready_event)
+
+	client.run()
 	```
 	"""
+
+	__slots__ = (
+		"http",
+		"_events",
+		"address",
+		"token",
+		"me",
+	)
 
 	def __init__(
 			self,
@@ -44,24 +61,43 @@ class Client:
 		呼び出した後、client.run()を使用してログインを行う必要があります。
 		"""
 		self.http = None
-		self.events = {}
+		self._events = {}
 		self.address = address
-		self.token = token
+		self._token = token
+		self.me = None
+
+	@property
+	def http(self):
+		return self.http
+	
+	@property
+	def address(self):
+		return self.address
+	
+	@property
+	def me(self):
+		return self.me
 
 	async def close_session(self):
 		await self.http.close()
 
 	def event(self, func):
-		self.events[func.__name__] = func
+		self._events[func.__name__] = func
 		return Event(func)
 
-	def dispatch_event(self, event_name, *args, **kwargs):
+	async def on_ready(self):
+		"""
+		run()関数を実行後、ログインできたときに発火されます。
+		"""
+		if self._events.get("on_ready", None) is not None:
+			await self._events["on_ready"]()
+
+	def add_event(self, event_name, func: FunctionType):
 		"""
 		イベントをディスパッチします。
 		デコレータを使う方法もあります。
 		"""
-		if event_name in self.events:
-			return self.events[event_name]()
+		self._events[event_name] = func
 
 	def run(self):
 		"""
@@ -73,9 +109,10 @@ class Client:
 		try:
 			self.http = aiohttp.ClientSession()
 			data = {
-				"i": self.token
+				"i": self._token
 			}
 			async with self.http.post(f"https://{self.address}/api/i", json=data, timeout=aiohttp.ClientTimeout(total=None)) as response:
-				print(await response.json())
+				self.me = MeDetailed.to_class(await response.json())
+			await self.on_ready()
 		finally:
 			await self.close_session()
