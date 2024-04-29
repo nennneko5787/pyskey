@@ -40,7 +40,7 @@ class MeDetailed(Object):
     followingCount: int
     notesCount: 292
     pinnedNoteIds: list
-    pinnedNotes: list[Note]
+    pinnedNotes: list
 
     def __post_init__(self):
         super().__post_init__()

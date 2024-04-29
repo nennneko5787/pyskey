@@ -1,5 +1,5 @@
 <div align="center">
-<font size="10">Pyskey</font><br>
+# Pyskey
 A python rapper library for misskey!
 </div>
 <hr>
