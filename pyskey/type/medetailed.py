@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from .object import Object
+from .role import Role
 from dataclasses import dataclass
 
 @dataclass
