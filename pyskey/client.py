@@ -46,8 +46,9 @@ class Client:
 		"http",
 		"_events",
 		"address",
-		"token",
+		"_token",
 		"me",
+		"connect_websocket",
 	)
 
 	def __init__(
@@ -55,6 +56,7 @@ class Client:
 			*,
 			address:str,
 			token:str,
+			connect_websocket: bool = False,
 			):
 		"""
 		Pyskeyを呼び出します。
@@ -65,18 +67,7 @@ class Client:
 		self.address = address
 		self._token = token
 		self.me = None
-
-	@property
-	def http(self):
-		return self.http
-	
-	@property
-	def address(self):
-		return self.address
-	
-	@property
-	def me(self):
-		return self.me
+		self.connect_websocket = connect_websocket
 
 	async def close_session(self):
 		await self.http.close()

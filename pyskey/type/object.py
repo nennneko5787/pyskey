@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List, Optional, Union
 from dataclasses import dataclass
 
 @dataclass
@@ -7,8 +8,8 @@ class Object:
     Pyskeyでのオブジェクトの基底クラス。
     """
 
-    createdAt: datetime
-    id: str
+    createdAt: Optional[datetime] = None
+    id: str = None
 
     @classmethod
     def to_class(cls, d: dict) -> 'Object':

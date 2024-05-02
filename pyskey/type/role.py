@@ -14,3 +14,13 @@ class Role():
 	isModerator: bool
 	isAdministrator: bool
 	displayOrder: int
+
+	def __eq__(self, other):
+		return self.id == other.id
+
+	@classmethod
+	def to_class(cls, d: dict) -> 'Role':
+		"""
+		辞書からクラスを作成します。
+		"""
+		return cls(**d)
