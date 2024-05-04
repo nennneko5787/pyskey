@@ -5,7 +5,7 @@ from .role import Role
 from .note import Note
 from .avatarDecoration import AvatarDecoration
 from .badgeRole import BadgeRole
-from .achievements import Achievements
+from .achievement import Achievement
 from ..utils import utils
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
@@ -93,7 +93,7 @@ class MeDetailed(Object):
     mutingNotificationTypes: List[str] = field(default_factory=list)
     notificationRecieveConfig: Dict[str, str] = field(default_factory=dict)
     emailNotificationTypes: List[str] = field(default_factory=list)
-    achievements: List[Achievements] = field(default_factory=list)
+    achievements: List[Achievement] = field(default_factory=list)
     loggedInDays: int = 0
     policies: Dict[str, str] = field(default_factory=dict)
 
@@ -115,4 +115,4 @@ class MeDetailed(Object):
         if self.badgeRoles:
             self.badgeRoles = [BadgeRole.to_class(badgeRole) for badgeRole in self.badgeRoles]
         if self.achievements:
-            self.achievements = [Achievements.to_class(achievements) for achievements in self.achievements]
+            self.achievements = [Achievement.to_class(achievements) for achievements in self.achievements]

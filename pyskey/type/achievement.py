@@ -3,7 +3,7 @@ from ..utils import utils
 from dataclasses import dataclass
 
 @dataclass
-class Achievements():
+class Achievement():
 	"""
 	misskeyの実績。
 	"""
