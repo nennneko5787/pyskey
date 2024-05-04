@@ -23,7 +23,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
-    'recommonmark',
+    'recommonmark'
 ]
 
 templates_path = ['_templates']
