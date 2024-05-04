@@ -178,9 +178,9 @@ class Client:
 			"renoteId": renoteId,
 		}
 
-		if len(fileIds) is not None:
+		if fileIds is not None:
 			data.setdefault("fileIds", fileIds)
-		if len(mediaIds) is not None:
+		if mediaIds is not None:
 			data.setdefault("mediaIds", mediaIds)
 		if poll is not None:
 			data.setdefault("poll", poll.to_dict())
