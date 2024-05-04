@@ -1,7 +1,13 @@
 import asyncio
-import aiohttp
+from .http import HTTP
 from .type.medetailed import MeDetailed
+from .type.note import Note
+from .type.enums import *
+from .type.errors import *
+from .type.poll import Poll
 from types import FunctionType
+from typing import Optional, Type
+from types import TracebackType
 
 class Event:
 	def __init__(self, func):
@@ -43,12 +49,13 @@ class Client:
 	"""
 
 	__slots__ = (
-		"http",
 		"_events",
-		"address",
-		"_token",
 		"me",
+		"address",
+		"token",
+		"http",
 		"connect_websocket",
+		"is_closed",
 	)
 
 	def __init__(
@@ -60,17 +67,27 @@ class Client:
 			):
 		"""
 		Pyskeyを呼び出します。
-		呼び出した後、client.run()を使用してログインを行う必要があります。
+		呼び出した後、Pyskey.run()を使用してログインを行う必要があります。
 		"""
-		self.http = None
 		self._events = {}
 		self.address = address
-		self._token = token
+		self.token = token
+		self.http = None
 		self.me = None
 		self.connect_websocket = connect_websocket
+		self.is_closed = False
 
-	async def close_session(self):
-		await self.http.close()
+	async def __aenter__(self):
+		return self
+
+	async def __aexit__(
+		self,
+		exc_type: Optional[Type[BaseException]],
+		exc_value: Optional[BaseException],
+		traceback: Optional[TracebackType],
+	) -> None:
+		if not self.is_closed:
+			await self.close()
 
 	def event(self, func):
 		self._events[func.__name__] = func
@@ -90,20 +107,96 @@ class Client:
 		"""
 		self._events[event_name] = func
 
+	async def close(self):
+		self.is_closed = True
+		await self.http.close()
+
 	def run(self):
 		"""
 		ログインを試みます。
 		"""
-		asyncio.run(self.mainloop())
 
-	async def mainloop(self):
+		async def runner():
+			async with self:
+				await self.start()
+
+		asyncio.run(runner())
+
+	async def start(self):
 		try:
-			self.http = aiohttp.ClientSession()
-			data = {
-				"i": self._token
-			}
-			async with self.http.post(f"https://{self.address}/api/i", json=data, timeout=aiohttp.ClientTimeout(total=None)) as response:
-				self.me = MeDetailed.to_class(await response.json())
-			await self.on_ready()
+			self.http = HTTP(
+				address=self.address,
+				token=self.token,
+			)
+
+			response, code = await self.http.post(f"https://{self.address}/api/i")
+			if code == 200:
+				response.setdefault("_client", self)
+				self.me = MeDetailed.to_class(response)
+				await self.on_ready()
+			elif code == 401:
+				raise UserNotAuthorizedError("Login failed. Incorrect token.")
+			elif code == 403:
+				raise AuthorizeForbiddenError()
+			elif code == 404:
+				raise UserNotAuthorizedError()
 		finally:
-			await self.close_session()
+			await self.close()
+
+	# ここからはmisskey関係の関数
+ 
+	async def create_note(
+		self,
+		text: str,
+		*,
+		visibility: NoteVisibility = NoteVisibility.public,
+		visibleUserIds: list = [],
+		cw: str = None,
+		localOnly: bool = False,
+		reactionAcceptance: ReactionAcceptance = ReactionAcceptance.all,
+		noExtractMentions: bool = False,
+		noExtractHashtags: bool = False,
+		noExtractEmojis: bool = False,
+		replyId=None,
+		renoteId=None,
+		fileIds: list = [],
+		mediaIds: list = [],
+		poll: Poll = None,
+	) -> Note:
+
+		data = {
+			"text": text,
+			"visibility": visibility,
+			"visibleUserIds": visibleUserIds,
+			"cw": cw,
+			"localOnly": localOnly,
+			"reactionAcceptance": reactionAcceptance,
+			"noExtractMentions": noExtractMentions,
+			"noExtractHashtags": noExtractHashtags,
+			"noExtractEmojis": noExtractEmojis,
+			"replyId": replyId,
+			"renoteId": renoteId,
+		}
+
+		if len(fileIds) != 0:
+			data.setdefault("fileIds", fileIds)
+		if len(mediaIds) != 0:
+			data.setdefault("mediaIds", mediaIds)
+		if poll is not None:
+			data.setdefault("poll", poll.to_dict())
+		print(data)
+
+		response, code = await self.http.post(
+			f"https://{self.address}/api/notes/create",
+			data=data
+		)
+		print(response)
+		if code == 200:
+			response["createdNote"].setdefault("_client", self)
+			return Note.to_class(response["createdNote"])
+		elif code == 400:
+			raise ClientError(response)
+		elif code == 401:
+			raise UserNotAuthorizedError()
+		elif code == 429:
+			raise RateLimitedError()

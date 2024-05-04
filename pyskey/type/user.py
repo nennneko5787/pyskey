@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
+from typing import Any
 from .object import Object
 from .avatarDecoration import AvatarDecoration
 from .badgeRole import BadgeRole
+from ..utils import utils
 from typing import List, Optional, Union
 from dataclasses import dataclass, field
 
@@ -16,6 +18,7 @@ class User(Object):
 	misskeyのユーザー。
 	"""
 
+	_client: Any = None
 	name: Optional[str] = None
 	username: str = None
 	host: Optional[str] = None
@@ -36,7 +39,7 @@ class User(Object):
 
 	def __post_init__(self):
 		if self.createdAt is not None:
-			self.createdAt = datetime.strptime(self.createdAt, "%Y-%m-%dT%H:%M:%S.%fZ")
+			self.createdAt = utils.to_datetime(self.createdAt)
 		if len(self.avatarDecorations) != 0:
 			self.avatarDecorations = [AvatarDecoration.to_class(avatarDecoration) for avatarDecoration in self.avatarDecorations]
 		if len(self.badgeRoles) != 0:

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 @dataclass
 class Role():
@@ -6,6 +7,7 @@ class Role():
 	misskeyのロール。
 	"""
 
+	_client: Any
 	id: str
 	name: str
 	color: str

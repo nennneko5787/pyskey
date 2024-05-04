@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from .object import Object
 from .user import User
+from ..utils import utils
 from dataclasses import dataclass
 
 @dataclass
@@ -45,7 +46,7 @@ class File(Object):
 
     def __post_init__(self):
         if self.createdAt is not None:
-            self.createdAt = datetime.strptime(self.createdAt, "%Y-%m-%dT%H:%M:%S.%fZ")
+            self.createdAt = utils.to_datetime(self.createdAt)
         if self.properties is not None:
             self.properties = FileProperty.to_class(self.properties)
         if self.user is not None:

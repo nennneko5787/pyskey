@@ -1,10 +1,12 @@
 from datetime import datetime, timezone
+from typing import Any
 from .object import Object
 from .role import Role
 from .note import Note
 from .avatarDecoration import AvatarDecoration
 from .badgeRole import BadgeRole
 from .achievements import Achievements
+from ..utils import utils
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 
@@ -15,6 +17,7 @@ class MeDetailed(Object):
     内部的には /api/i から取得します。
     """
 
+    _client: Any = None
     name: str = ""
     username: str = ""
     host: str = ""
@@ -84,6 +87,7 @@ class MeDetailed(Object):
     hasUnreadNotification: bool = False
     hasPendingReceivedFollowRequest: bool = False
     unreadNotificationsCount: int = 0
+    hardMutedWords: List[str] = field(default_factory=list)
     mutedWords: List[str] = field(default_factory=list)
     mutedInstances: List[str] = field(default_factory=list)
     mutingNotificationTypes: List[str] = field(default_factory=list)
@@ -101,8 +105,10 @@ class MeDetailed(Object):
 
     def __post_init__(self):
         if self.roles:
+            self.roles.setdefault("_client", self._client)
             self.roles = [Role.to_class(role) for role in self.roles]
         if self.pinnedNotes:
+            self.pinnedNotes.setdefault("_client", self._client)
             self.pinnedNotes = [Note.to_class(note) for note in self.pinnedNotes]
         if self.avatarDecorations:
             self.avatarDecorations = [AvatarDecoration.to_class(avatarDecoration) for avatarDecoration in self.avatarDecorations]

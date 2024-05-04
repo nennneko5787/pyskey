@@ -1,4 +1,6 @@
 from .client import Client
+from .http import HTTP
+from .utils import utils
 
 from .type.object import Object
 from .type.medetailed import MeDetailed
