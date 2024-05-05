@@ -36,7 +36,7 @@ Utils
 Errors
 --------------------
 
-.. automodule:: pyskey.errors
+.. automodule:: pyskey.errors.*
    :members:
    :undoc-members:
    :show-inheritance:
@@ -45,7 +45,7 @@ Errors
 Enums
 --------------------
 
-.. automodule:: pyskey.enums
+.. automodule:: pyskey.enums.*
    :members:
    :undoc-members:
    :show-inheritance:
@@ -54,7 +54,7 @@ Enums
 Object
 --------------------
 
-.. automodule:: pyskey.object
+.. automodule:: pyskey.Object
    :members:
    :undoc-members:
    :show-inheritance:
@@ -63,7 +63,7 @@ Object
 MeDetailed
 -------------------
 
-.. automodule:: pyskey.medetailed
+.. automodule:: pyskey.MeDetailed
    :members:
    :undoc-members:
    :show-inheritance:
@@ -72,7 +72,7 @@ MeDetailed
 User
 ------------------
 
-.. automodule:: pyskey.user
+.. automodule:: pyskey.User
    :members:
    :undoc-members:
    :show-inheritance:
@@ -81,7 +81,7 @@ User
 Note
 ---------------------
 
-.. automodule:: pyskey.note
+.. automodule:: pyskey.Note
    :members:
    :undoc-members:
    :show-inheritance:
@@ -90,7 +90,7 @@ Note
 Role
 -------------------
 
-.. automodule:: pyskey.role
+.. automodule:: pyskey.Role
    :members:
    :undoc-members:
    :show-inheritance:
@@ -99,7 +99,7 @@ Role
 Poll
 -------------------
 
-.. automodule:: pyskey.poll
+.. automodule:: pyskey.Poll
    :members:
    :undoc-members:
    :show-inheritance:
@@ -108,7 +108,7 @@ Poll
 Channel
 -------------------
 
-.. automodule:: pyskey.channel
+.. automodule:: pyskey.Channel
    :members:
    :undoc-members:
    :show-inheritance:
@@ -117,7 +117,7 @@ Channel
 Achievement
 -------------------
 
-.. automodule:: pyskey.achievement
+.. automodule:: pyskey.Achievement
    :members:
    :undoc-members:
    :show-inheritance:
@@ -126,7 +126,7 @@ Achievement
 AvatarDecoration
 --------------------
 
-.. automodule:: pyskey.avatardecoration
+.. automodule:: pyskey.AvatarDecoration
    :members:
    :undoc-members:
    :show-inheritance:
@@ -135,7 +135,7 @@ AvatarDecoration
 BadgeRole
 --------------------
 
-.. automodule:: pyskey.badgerole
+.. automodule:: pyskey.BadgeRole
    :members:
    :undoc-members:
    :show-inheritance:
@@ -144,7 +144,8 @@ BadgeRole
 Folder
 --------------------
 
-.. automodule:: pyskey.folder
+.. automodule:: pyskey.Folder
+   :members:
    :undoc-members:
    :show-inheritance:
    :member-order: bysource
@@ -152,7 +153,7 @@ Folder
 File
 --------------------
 
-.. automodule:: pyskey.file
+.. automodule:: pyskey.File
    :members:
    :undoc-members:
    :show-inheritance:
