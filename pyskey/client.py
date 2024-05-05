@@ -66,8 +66,22 @@ class Client:
 			connect_websocket: bool = False,
 			):
 		"""
-		Pyskeyを呼び出します。
-		呼び出した後、Pyskey.run()を使用してログインを行う必要があります。
+		Pyskeyを初期化します。
+		初期化した後、Client.run()関数を実行する必要があります。
+
+   		Parameters
+		----------
+		address : str
+			misskeyインスタンスのアドレス。
+		token : str
+			misskeyアカウントのトークン。漏出しないように気を付けてください。
+		connect_websocket : bool = False
+			WebSocketに接続するかどうか。
+
+		Returns
+		-------
+		Client
+			初期化したClientのインスタンス。
 		"""
 		self._events = {}
 		self.address = address
@@ -100,14 +114,26 @@ class Client:
 		if self._events.get("on_ready", None) is not None:
 			await self._events["on_ready"]()
 
-	def add_event(self, event_name, func: FunctionType):
+	def add_event(self, event_name: str, func: FunctionType):
 		"""
-		イベントをディスパッチします。
-		デコレータを使う方法もあります。
+		イベントを登録します。
+		この関数を使う方法のほかに、デコレータを利用してイベントを登録する方法もあります。
+
+   		Parameters
+		----------
+		event_name : str
+			登録するイベントの名前。間違っていてもエラーは出ません。
+		func : FunctionType
+			イベントが実行される関数。
 		"""
 		self._events[event_name] = func
 
 	async def close(self):
+		"""
+		初期化したPyskeyをクローズします。
+		プログラムの途中でこの関数を呼ぶのはお勧めしません。
+		"""
+		
 		self.is_closed = True
 		await self.http.close()
 
@@ -157,12 +183,68 @@ class Client:
 		noExtractMentions: bool = False,
 		noExtractHashtags: bool = False,
 		noExtractEmojis: bool = False,
-		replyId=None,
-		renoteId=None,
+		replyId: str = None,
+		renoteId: str = None,
 		fileIds: list = None,
 		mediaIds: list = None,
 		poll: Poll = None,
 	) -> Note:
+
+		"""
+		ノートを作成します。
+
+   		Parameters
+		----------
+		text : str
+			ノートの本文。
+		visibility : NoteVisibility = NoteVisibility.public
+			ノートの公開範囲。
+		visibleUserIds : list = None
+			ノートを公開するユーザーのリスト。
+			visibilityをNoteVisibility.specifiedにしたときに指定します。
+		cw : str = None
+			ノートの注訳。
+			これをNone以外に指定した場合、ノートが閲覧注意になります。
+		localOnly : str = False
+			ノートを連合しないかどうか。
+		reactionAcceptance : ReactionAcceptance = ReactionAcceptance.all
+			リアクションの許可範囲。
+		noExtractMentions : bool = False
+			メンションを展開するかどうか。
+		noExtractHashtags : bool = False
+			ハッシュタグを展開するかどうか。
+		noExtractEmojis : bool = False
+			絵文字を展開するかどうか。
+		replyId : str = None
+			返信先ノートのID。
+			Note.reply_note関数で代用できます。
+		renoteId : str = None
+			リノート先ノートのID。
+			Note.renote_note関数で代用できます。
+			また、これを指定した場合、textを""(空欄)にするとただのリノートになります。
+			それ以外の場合は引用リノートになります。
+		fileIds : list = None
+			添付ファイルのIDのリスト。
+		mediaIds : list = None
+			添付メディアファイルのIDのリスト。
+		poll : Poll = None
+			アンケート。
+			以下のようにして作成します。
+			.. code-block:: python3
+
+			poll = pyskey.Poll(
+				choices=["選択肢1", "選択肢2", "選択肢3"]
+			)
+			await misskey.create_note(
+				"アンケートのテスト",
+				poll=poll,
+			)
+			
+		Returns
+		-------
+		Note
+			作成したNoteのインスタンス。
+		"""
 
 		data = {
 			"text": text,
@@ -190,7 +272,7 @@ class Client:
 			f"https://{self.address}/api/notes/create",
 			data=data
 		)
-		print(response)
+
 		if code == 200:
 			response["createdNote"].setdefault("_client", self)
 			return Note.to_class(response["createdNote"])

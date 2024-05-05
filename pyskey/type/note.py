@@ -65,6 +65,54 @@ class Note(Object):
 		mediaIds: list = None,
 		poll: Poll = None,
 	) -> 'Note':
+		"""
+		ノートに返信します。
+
+   		Parameters
+		----------
+		text : str
+			ノートの本文。
+		visibility : NoteVisibility = NoteVisibility.public
+			ノートの公開範囲。
+		visibleUserIds : list = None
+			ノートを公開するユーザーのリスト。
+			visibilityをNoteVisibility.specifiedにしたときに指定します。
+		cw : str = None
+			ノートの注訳。
+			これをNone以外に指定した場合、ノートが閲覧注意になります。
+		localOnly : str = False
+			ノートを連合しないかどうか。
+		reactionAcceptance : ReactionAcceptance = ReactionAcceptance.all
+			リアクションの許可範囲。
+		noExtractMentions : bool = False
+			メンションを展開するかどうか。
+		noExtractHashtags : bool = False
+			ハッシュタグを展開するかどうか。
+		noExtractEmojis : bool = False
+			絵文字を展開するかどうか。
+		fileIds : list = None
+			添付ファイルのIDのリスト。
+		mediaIds : list = None
+			添付メディアファイルのIDのリスト。
+		poll : Poll = None
+			アンケート。
+			以下のようにして作成します。
+			.. code-block:: python3
+
+			poll = pyskey.Poll(
+				choices=["選択肢1", "選択肢2", "選択肢3"]
+			)
+			await misskey.create_note(
+				"アンケートのテスト",
+				poll=poll,
+			)
+			
+		Returns
+		-------
+		Note
+			作成したNoteのインスタンス。
+		"""
+		
 		return await self._client.create_note(
 			text=text,
 			visibility=visibility,
@@ -97,6 +145,55 @@ class Note(Object):
 		mediaIds: list = None,
 		poll: Poll = None,
 	) -> 'Note':
+		"""
+		ノートをリノート・引用リノートします。
+
+   		Parameters
+		----------
+		text : str
+			ノートの本文。
+			""(空欄)にすると通常のリノートになり、それ以外の場合は引用リノートになります。
+		visibility : NoteVisibility = NoteVisibility.public
+			ノートの公開範囲。
+		visibleUserIds : list = None
+			ノートを公開するユーザーのリスト。
+			visibilityをNoteVisibility.specifiedにしたときに指定します。
+		cw : str = None
+			ノートの注訳。
+			これをNone以外に指定した場合、ノートが閲覧注意になります。
+		localOnly : str = False
+			ノートを連合しないかどうか。
+		reactionAcceptance : ReactionAcceptance = ReactionAcceptance.all
+			リアクションの許可範囲。
+		noExtractMentions : bool = False
+			メンションを展開するかどうか。
+		noExtractHashtags : bool = False
+			ハッシュタグを展開するかどうか。
+		noExtractEmojis : bool = False
+			絵文字を展開するかどうか。
+		fileIds : list = None
+			添付ファイルのIDのリスト。
+		mediaIds : list = None
+			添付メディアファイルのIDのリスト。
+		poll : Poll = None
+			アンケート。
+			以下のようにして作成します。
+			.. code-block:: python3
+
+			poll = pyskey.Poll(
+				choices=["選択肢1", "選択肢2", "選択肢3"]
+			)
+			await misskey.create_note(
+				"アンケートのテスト",
+				poll=poll,
+			)
+			
+		Returns
+		-------
+		Note
+			作成したNoteのインスタンス。
+		"""
+
 		return await self._client.create_note(
 			text=text,
 			visibility=visibility,
@@ -112,6 +209,70 @@ class Note(Object):
 			mediaIds=mediaIds,
 			poll=poll,
 		)
+
+	async def add_reaction(self, reaction: str) -> 'Note':
+		"""
+		ノートにリアクションを追加します。
+
+   		Parameters
+		----------
+		reaction : str
+			リアクションのID。
+			
+		Returns
+		-------
+		Note
+			変更後のNoteのインスタンス。
+		"""
+
+		data = {
+			"noteId": self.id,
+			"reaction": reaction
+		}
+
+		response, code = await self.http.post(
+			f"https://{self.address}/api/notes/reactions/create",
+			data=data
+		)
+
+		if code == 204:
+			self.reactions.append(reaction)
+			return self
+		elif code == 400:
+			raise ClientError(response)
+		elif code == 401:
+			raise UserNotAuthorizedError()
+		elif code == 429:
+			raise RateLimitedError()
+
+	async def delete_reaction(self, reaction: str) -> 'Note':
+		"""
+		ユーザーがつけたリアクションをノートから削除します。
+			
+		Returns
+		-------
+		Note
+			変更後のNoteのインスタンス。
+		"""
+
+		data = {
+			"noteId": self.id
+		}
+
+		response, code = await self.http.post(
+			f"https://{self.address}/api/notes/reactions/create",
+			data=data
+		)
+
+		if code == 204:
+			self.reactions.remove(reaction)
+			return self
+		elif code == 400:
+			raise ClientError(response)
+		elif code == 401:
+			raise UserNotAuthorizedError()
+		elif code == 429:
+			raise RateLimitedError()
 
 	def __str__(self):
 		return f"{self.userId} : {self.text}"
