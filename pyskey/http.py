@@ -26,7 +26,10 @@ class HTTP():
         _data = json.dumps(data)
         headers={"Content-Type": "application/json"}
         async with self._http.post(address, headers=headers, data=_data) as response:
-            return (await response.json(), response.status)
+            if response.status != 204:
+                return (await response.json(), response.status)
+            else:
+                return "", response.status
 
     async def close(self):
         """

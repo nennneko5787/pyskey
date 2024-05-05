@@ -25,27 +25,28 @@ class Client:
 	"""
 	Pyskeyのクライアントクラス。
 	以下の方法で呼び出すことを推奨します。
-	```
-	client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
-	```
+	.. code-block:: python3
+	
+		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
+
 	クラスを継承する方法でも呼び出せるかもしれません。(未検証)
 
 	イベントを追加するには、デコレータを使用するか、add_event関数を使用します。
-	```
-	client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
+	.. code-block:: python3
 
-	# デコレータを使う方法
-	@client.event
-	async def on_ready():
-		print(f"{client.me.name} ( {client.me.username} ) にログインしました - デコレータ")
+		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
 
-	# add_event関数を使う方法
-	async def ready_event():
-		print(f"{client.me.name} ( {client.me.username} ) にログインしました - add_event関数")
-	add_event("on_ready", ready_event)
+		# デコレータを使う方法
+		@client.event
+		async def on_ready():
+			print(f"{client.me.name} ( {client.me.username} ) にログインしました - デコレータ")
 
-	client.run()
-	```
+		# add_event関数を使う方法
+		async def ready_event():
+			print(f"{client.me.name} ( {client.me.username} ) にログインしました - add_event関数")
+		add_event("on_ready", ready_event)
+
+		client.run()
 	"""
 
 	__slots__ = (
@@ -232,13 +233,13 @@ class Client:
 			以下のようにして作成します。
 			.. code-block:: python3
 
-			poll = pyskey.Poll(
-				choices=["選択肢1", "選択肢2", "選択肢3"]
-			)
-			await misskey.create_note(
-				"アンケートのテスト",
-				poll=poll,
-			)
+				poll = pyskey.Poll(
+					choices=["選択肢1", "選択肢2", "選択肢3"]
+				)
+				await misskey.create_note(
+					"アンケートのテスト",
+					poll=poll,
+				)
 			
 		Returns
 		-------
@@ -249,7 +250,6 @@ class Client:
 		data = {
 			"text": text,
 			"visibility": visibility,
-			"visibleUserIds": visibleUserIds,
 			"cw": cw,
 			"localOnly": localOnly,
 			"reactionAcceptance": reactionAcceptance,
@@ -260,6 +260,8 @@ class Client:
 			"renoteId": renoteId,
 		}
 
+		if visibleUserIds is not None:
+			data.setdefault("visibleUserIds", visibleUserIds)
 		if fileIds is not None:
 			data.setdefault("fileIds", fileIds)
 		if mediaIds is not None:

@@ -39,7 +39,7 @@ class Note(Object):
 	localOnly: bool = False
 	reactionAcceptance: str = ""
 	reactionEmojis: List[str] = field(default_factory=list)
-	reactions: List[str] = field(default_factory=list)
+	reactions: dict[str] = field(default_factory=dict)
 	reactionCount: int = 0
 	renoteCount: int = 0
 	repliesCount: int = 0
@@ -230,13 +230,13 @@ class Note(Object):
 			"reaction": reaction
 		}
 
-		response, code = await self.http.post(
-			f"https://{self.address}/api/notes/reactions/create",
+		response, code = await self._client.http.post(
+			f"https://{self._client.address}/api/notes/reactions/create",
 			data=data
 		)
 
 		if code == 204:
-			self.reactions.append(reaction)
+			self.reactions[reaction] = self.reactions.get(reaction, 0) + 1
 			return self
 		elif code == 400:
 			raise ClientError(response)
@@ -265,7 +265,7 @@ class Note(Object):
 		)
 
 		if code == 204:
-			self.reactions.remove(reaction)
+			self.reactions[reaction] = self.reactions.get(reaction, 0) - 1
 			return self
 		elif code == 400:
 			raise ClientError(response)

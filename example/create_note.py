@@ -1,7 +1,7 @@
 import pyskey
 from datetime import datetime, timedelta
 
-misskey = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
+misskey = pyskey.Client(address="misskey.nukumori-sky.net", token="ZXS43Bidw6QZ8BANC0apxfE2EtOH45OS")
 
 @misskey.event
 async def on_ready():
@@ -20,7 +20,6 @@ async def on_ready():
 
     note = await misskey.create_note(
         "リプライのテスト",
-        poll=poll,
     )
     await note.reply_note(
         "リプライしてみる"
@@ -28,10 +27,15 @@ async def on_ready():
 
     note = await misskey.create_note(
         "リノートのテスト",
-        poll=poll,
     )
     await note.reply_note(
         "リノートしてみる"
+    )
+    note = await misskey.create_note(
+        "リアクションのテスト",
+    )
+    await note.add_reaction(
+        "❤️"
     )
 
 misskey.run()
