@@ -30,7 +30,7 @@ class Client:
 
 		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
 		
-		...
+
 
 	クラスを継承する方法でも呼び出せるかもしれません。(未検証)
 
@@ -52,7 +52,7 @@ class Client:
 
 		client.run()
 
-		...
+
 	"""
 
 	__slots__ = (
@@ -248,7 +248,7 @@ class Client:
 					poll=poll,
 				)
 
-				...
+
 			
 		Returns
 		-------
