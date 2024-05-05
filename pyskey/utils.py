@@ -3,7 +3,7 @@ from typing import Union
 
 class utils():
     @classmethod
-    def to_datetime(cls, date: Union[str, int]):
+    def to_datetime(cls, date: Union[str, int, datetime]):
         """
         dateにstrを渡した場合はdatetime.strptime関数で、intを渡した場合はdatetime.fromtimestampを返すユーティリティ関数です。
         """

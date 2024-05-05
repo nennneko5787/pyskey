@@ -150,7 +150,7 @@ class Client:
 		text: str,
 		*,
 		visibility: NoteVisibility = NoteVisibility.public,
-		visibleUserIds: list = [],
+		visibleUserIds: list = None,
 		cw: str = None,
 		localOnly: bool = False,
 		reactionAcceptance: ReactionAcceptance = ReactionAcceptance.all,
@@ -159,8 +159,8 @@ class Client:
 		noExtractEmojis: bool = False,
 		replyId=None,
 		renoteId=None,
-		fileIds: list = [],
-		mediaIds: list = [],
+		fileIds: list = None,
+		mediaIds: list = None,
 		poll: Poll = None,
 	) -> Note:
 
@@ -178,9 +178,9 @@ class Client:
 			"renoteId": renoteId,
 		}
 
-		if len(fileIds) != 0:
+		if fileIds is not None:
 			data.setdefault("fileIds", fileIds)
-		if len(mediaIds) != 0:
+		if mediaIds is not None:
 			data.setdefault("mediaIds", mediaIds)
 		if poll is not None:
 			data.setdefault("poll", poll.to_dict())
