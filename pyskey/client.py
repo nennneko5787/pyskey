@@ -25,8 +25,9 @@ class Client:
 	"""
 	Pyskeyのクライアントクラス。
 	以下の方法で呼び出すことを推奨します。
+
 	.. code-block:: python3
-	
+
 		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
 		
 		...
@@ -34,6 +35,7 @@ class Client:
 	クラスを継承する方法でも呼び出せるかもしれません。(未検証)
 
 	イベントを追加するには、デコレータを使用するか、add_event関数を使用します。
+
 	.. code-block:: python3
 
 		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
@@ -198,7 +200,7 @@ class Client:
 		"""
 		ノートを作成します。
 
-   		Parameters
+		Parameters
 		----------
 		text : str
 			ノートの本文。
@@ -235,6 +237,7 @@ class Client:
 		poll : Poll = None
 			アンケート。
 			以下のようにして作成します。
+
 			.. code-block:: python3
 
 				poll = pyskey.Poll(

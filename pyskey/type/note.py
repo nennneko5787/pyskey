@@ -66,9 +66,9 @@ class Note(Object):
 		poll: Poll = None,
 	) -> 'Note':
 		"""
-		ノートに返信します。
+		ノートにリプライします。
 
-   		Parameters
+		Parameters
 		----------
 		text : str
 			ノートの本文。
@@ -90,6 +90,14 @@ class Note(Object):
 			ハッシュタグを展開するかどうか。
 		noExtractEmojis : bool = False
 			絵文字を展開するかどうか。
+		replyId : str = None
+			返信先ノートのID。
+			Note.reply_note関数で代用できます。
+		renoteId : str = None
+			リノート先ノートのID。
+			Note.renote_note関数で代用できます。
+			また、これを指定した場合、textを""(空欄)にするとただのリノートになります。
+			それ以外の場合は引用リノートになります。
 		fileIds : list = None
 			添付ファイルのIDのリスト。
 		mediaIds : list = None
@@ -97,15 +105,18 @@ class Note(Object):
 		poll : Poll = None
 			アンケート。
 			以下のようにして作成します。
+
 			.. code-block:: python3
 
-			poll = pyskey.Poll(
-				choices=["選択肢1", "選択肢2", "選択肢3"]
-			)
-			await misskey.create_note(
-				"アンケートのテスト",
-				poll=poll,
-			)
+				poll = pyskey.Poll(
+					choices=["選択肢1", "選択肢2", "選択肢3"]
+				)
+				await misskey.create_note(
+					"アンケートのテスト",
+					poll=poll,
+				)
+
+				...
 			
 		Returns
 		-------
@@ -148,11 +159,10 @@ class Note(Object):
 		"""
 		ノートをリノート・引用リノートします。
 
-   		Parameters
+		Parameters
 		----------
 		text : str
 			ノートの本文。
-			""(空欄)にすると通常のリノートになり、それ以外の場合は引用リノートになります。
 		visibility : NoteVisibility = NoteVisibility.public
 			ノートの公開範囲。
 		visibleUserIds : list = None
@@ -171,6 +181,14 @@ class Note(Object):
 			ハッシュタグを展開するかどうか。
 		noExtractEmojis : bool = False
 			絵文字を展開するかどうか。
+		replyId : str = None
+			返信先ノートのID。
+			Note.reply_note関数で代用できます。
+		renoteId : str = None
+			リノート先ノートのID。
+			Note.renote_note関数で代用できます。
+			また、これを指定した場合、textを""(空欄)にするとただのリノートになります。
+			それ以外の場合は引用リノートになります。
 		fileIds : list = None
 			添付ファイルのIDのリスト。
 		mediaIds : list = None
@@ -178,15 +196,18 @@ class Note(Object):
 		poll : Poll = None
 			アンケート。
 			以下のようにして作成します。
+
 			.. code-block:: python3
 
-			poll = pyskey.Poll(
-				choices=["選択肢1", "選択肢2", "選択肢3"]
-			)
-			await misskey.create_note(
-				"アンケートのテスト",
-				poll=poll,
-			)
+				poll = pyskey.Poll(
+					choices=["選択肢1", "選択肢2", "選択肢3"]
+				)
+				await misskey.create_note(
+					"アンケートのテスト",
+					poll=poll,
+				)
+
+				...
 			
 		Returns
 		-------

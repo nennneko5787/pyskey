@@ -1,7 +1,7 @@
 import pyskey
 from datetime import datetime, timedelta
 
-misskey = pyskey.Client(address="misskey.nukumori-sky.net", token="ZXS43Bidw6QZ8BANC0apxfE2EtOH45OS")
+misskey = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
 
 @misskey.event
 async def on_ready():
