@@ -74,37 +74,8 @@ class Client:
 			):
 		"""
 		Pyskeyのクライアントクラス。
-		以下の方法で呼び出すことを推奨します。
 
-		.. code-block:: python3
-
-			client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
-
-			client.run()
-			
-
-
-		クラスを継承する方法でも呼び出せるかもしれません。(未検証)
-
-		イベントを追加するには、デコレータを使用するか、add_event関数を使用します。
-
-		.. code-block:: python3
-
-			client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
-
-			# デコレータを使う方法
-			@client.event
-			async def on_ready():
-				print(f"{client.me.name} ( {client.me.username} ) にログインしました - デコレータ")
-
-			# add_event関数を使う方法
-			async def ready_event():
-				print(f"{client.me.name} ( {client.me.username} ) にログインしました - add_event関数")
-			add_event("on_ready", ready_event)
-
-			client.run()
-
-   		Parameters
+		Parameters
 		----------
 		address : str
 			misskeyインスタンスのアドレス。
