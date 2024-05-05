@@ -28,6 +28,8 @@ class Client:
 	.. code-block:: python3
 	
 		client = pyskey.Client(address="misskey.example.com", token="xxxxxxxxxx")
+		
+		...
 
 	クラスを継承する方法でも呼び出せるかもしれません。(未検証)
 
@@ -47,6 +49,8 @@ class Client:
 		add_event("on_ready", ready_event)
 
 		client.run()
+
+		...
 	"""
 
 	__slots__ = (
@@ -240,6 +244,8 @@ class Client:
 					"アンケートのテスト",
 					poll=poll,
 				)
+
+				...
 			
 		Returns
 		-------
