@@ -1,2 +1,3 @@
 sphinx_rtd_theme
 aiohttp
+git+https://github.com/nennneko5787/pyskey.git
