@@ -1,3 +1,2 @@
 sphinx_rtd_theme
 aiohttp
-git+https://github.com/readthedocs/recommonmark.git
